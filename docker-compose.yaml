@@ -1,0 +1,59 @@
+services:
+  simo:
+    build:
+      context: ./simo
+      dockerfile: Dockerfile
+    container_name: simo-service-container
+    ports:
+      - "9091:9091"
+      - "5006:5006"  # Debug port
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/postgres
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    networks:
+      - simo-net
+    volumes:
+      - ./simo/target:/app #reload every time the jar, needed for code changes, maven package + reload container
+    healthcheck:
+      test: "curl -f localhost:9091/actuator/health || exit 1"
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+  postgres:
+    container_name: simodb-container
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - simo-net
+
+  authentication-service:
+    container_name: authentication-service-container
+    build:
+      context: ./authentication-service
+      dockerfile: Dockerfile
+    ports:
+      - "9090:9090"
+      - "5005:5005"  # Debug port
+    networks:
+      - auth-net
+    volumes:
+      - ./authentication-service/target:/app #reload every time the jar, needed for code changes, maven package + reload container
+    healthcheck:
+      test: "curl -f localhost:9090/actuator/health || exit 1"
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+networks:
+  simo-net:
+  auth-net:
