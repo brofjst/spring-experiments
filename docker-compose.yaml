@@ -19,8 +19,8 @@ services:
       - ./simo/target:/app #reload every time the jar, needed for code changes, maven package + reload container
     healthcheck:
       test: "curl -f localhost:9091/actuator/health || exit 1"
-      interval: 5s
-      timeout: 3s
+      interval: 10s
+      timeout: 5s
       retries: 3
       start_period: 10s
 
@@ -50,8 +50,8 @@ services:
       - ./authentication-service/target:/app #reload every time the jar, needed for code changes, maven package + reload container
     healthcheck:
       test: "curl -f localhost:9090/actuator/health || exit 1"
-      interval: 5s
-      timeout: 3s
+      interval: 10s
+      timeout: 5s
       retries: 3
       start_period: 10s
 networks:
