@@ -1,7 +1,7 @@
 services:
   simo:
     build:
-      context: ./simo
+      context: ./simo-service
       dockerfile: Dockerfile
     container_name: simo-service-container
     ports:
@@ -16,7 +16,7 @@ services:
     networks:
       - simo-net
     volumes:
-      - ./simo/target:/app #reload every time the jar, needed for code changes, maven package + reload container
+      - ./simo-service/target:/app #reload every time the jar, needed for code changes, maven package + reload container
     healthcheck:
       test: "curl -f localhost:9091/actuator/health || exit 1"
       interval: 10s

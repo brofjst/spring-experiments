@@ -1,4 +1,5 @@
 #!/bin/bash
+set -x
 
 # List of microservice repositories
 microservices=(
@@ -10,3 +11,4 @@ microservices=(
 for microservice in "${microservices[@]}"; do
   git clone git@github.com:brofjst/${microservice}.git
 done
+
